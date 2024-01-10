@@ -5,19 +5,122 @@
 package br.tec.codewaves.visualcrud.view;
 
 import java.awt.*;
+import java.awt.event.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 
+import br.tec.codewaves.visualcrud.User;
+import br.tec.codewaves.visualcrud.UserOperations;
 import net.miginfocom.swing.*;
 
 /**
  * @author magne
  */
 public class MainFrame extends JFrame {
+    UserOperations userOperations = new UserOperations();
+    User user = new User();
 
 
     public MainFrame() {
         initComponents();
+    }
+
+    private void cleaner(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void create(ActionEvent e) {
+        // TODO add your code here
+        String userName = textName.getText();
+        String userEmail = textEmail.getText();
+        String userBirthDate = textBirthDate.getText();
+
+        if (userOperations.validarEmail(userEmail)) {
+            JOptionPane.showMessageDialog(null, "Atenção!\n" +
+                    "Usuário com email duplicado\ndados não serão salvos!");
+            cleanEntries();
+
+        } else {
+            if (isBirthdayDateOk(user, userBirthDate)) {
+                User inputUser = new User(userName, userEmail,
+                        formatLocalDate(userBirthDate));
+                userOperations.saveUser(inputUser);
+
+                JOptionPane.showMessageDialog(null,
+                        "Usuário cadastrado com sucesso\n" +
+                        "Nome: " + userName + "\nemail: " + userEmail +
+                                "\nData Nascimento: " + userBirthDate);
+
+                cleanEntries();
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Data inválida!");
+            }
+        }
+    }
+
+    private void update(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void delete(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void read(ActionEvent e) {
+        // TODO add your code here
+        ArrayList<User> dataBaseUsers;
+        String readOut = "";
+
+        dataBaseUsers = userOperations.getDataBaseUsers();
+
+        for(User item : dataBaseUsers) {
+            readOut += ("------" +
+                    "\nNome: " + item.getUserName() +
+                    "\ne-mail: " + item.getUserEmail() +
+                    " Nascimento: " + item.getUserBirthDate() + "\n");
+        }
+        textMessage.setText(readOut);
+    }
+
+    private void right(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void left(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void search(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private static boolean isBirthdayDateOk(User user,
+                                            String inputBirthdayDate) {
+
+        boolean isYearOk = user.checkYear(Integer.parseInt(inputBirthdayDate.substring(6, 10)));
+        boolean isMonthOk = user.checkMonth(Integer.parseInt(inputBirthdayDate.substring(3, 5)));
+        boolean isDayOk = user.checkDay(Integer.parseInt(inputBirthdayDate.substring(0, 2)),
+                Integer.parseInt(inputBirthdayDate.substring(3, 5)),
+                Integer.parseInt(inputBirthdayDate.substring(6, 10)));
+
+        return isYearOk && isMonthOk && isDayOk;
+    }
+
+    private static LocalDate formatLocalDate(String inputBirthdayDate) {
+        return LocalDate.of(
+                Integer.parseInt(inputBirthdayDate.substring(6, 10)),
+                Integer.parseInt(inputBirthdayDate.substring(3, 5)),
+                Integer.parseInt(inputBirthdayDate.substring(0, 2)));
+    }
+
+    private void cleanEntries() {
+        textEmail.setText("");
+        textName.setText("");
+        textBirthDate.setText("");
+        textMessage.setText("");
     }
 
     private void initComponents() {
@@ -28,16 +131,14 @@ public class MainFrame extends JFrame {
         textName = new JTextField();
         label3 = new JLabel();
         textEmail = new JTextField();
-        buttonSearch = new JButton();
         label4 = new JLabel();
         textBirthDate = new JFormattedTextField();
-        buttonLeft = new JButton();
-        buttonRead = new JButton();
-        buttonRight = new JButton();
+        buttonCreate = new JButton();
+        buttonSearch = new JButton();
         scrollPane1 = new JScrollPane();
         textMessage = new JTextArea();
         buttonCleaner = new JButton();
-        buttonCreate = new JButton();
+        buttonRead = new JButton();
         buttonUpdate = new JButton();
         buttonDelete = new JButton();
 
@@ -79,10 +180,6 @@ public class MainFrame extends JFrame {
         contentPane.add(label3, "cell 0 2");
         contentPane.add(textEmail, "cell 1 2 4 1");
 
-        //---- buttonSearch ----
-        buttonSearch.setText("Pesquisar");
-        contentPane.add(buttonSearch, "cell 5 2 2 1");
-
         //---- label4 ----
         label4.setText("Data de Nascimento");
         contentPane.add(label4, "cell 0 3 2 1");
@@ -91,17 +188,15 @@ public class MainFrame extends JFrame {
         textBirthDate.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(textBirthDate, "cell 2 3");
 
-        //---- buttonLeft ----
-        buttonLeft.setText("<");
-        contentPane.add(buttonLeft, "cell 3 3");
+        //---- buttonCreate ----
+        buttonCreate.setText("Incluir");
+        buttonCreate.addActionListener(e -> create(e));
+        contentPane.add(buttonCreate, "cell 3 3 2 1");
 
-        //---- buttonRead ----
-        buttonRead.setText("Listar");
-        contentPane.add(buttonRead, "cell 4 3 2 1");
-
-        //---- buttonRight ----
-        buttonRight.setText(">");
-        contentPane.add(buttonRight, "cell 6 3");
+        //---- buttonSearch ----
+        buttonSearch.setText("Pesquisar");
+        buttonSearch.addActionListener(e -> search(e));
+        contentPane.add(buttonSearch, "cell 5 3 2 1");
 
         //======== scrollPane1 ========
         {
@@ -114,18 +209,22 @@ public class MainFrame extends JFrame {
 
         //---- buttonCleaner ----
         buttonCleaner.setText("Limpar tela");
+        buttonCleaner.addActionListener(e -> cleaner(e));
         contentPane.add(buttonCleaner, "cell 0 7 2 1");
 
-        //---- buttonCreate ----
-        buttonCreate.setText("Incluir");
-        contentPane.add(buttonCreate, "cell 2 7");
+        //---- buttonRead ----
+        buttonRead.setText("Listar");
+        buttonRead.addActionListener(e -> read(e));
+        contentPane.add(buttonRead, "cell 2 7");
 
         //---- buttonUpdate ----
         buttonUpdate.setText("Alterar");
+        buttonUpdate.addActionListener(e -> update(e));
         contentPane.add(buttonUpdate, "cell 3 7 2 1");
 
         //---- buttonDelete ----
         buttonDelete.setText("Apagar");
+        buttonDelete.addActionListener(e -> delete(e));
         contentPane.add(buttonDelete, "cell 5 7 2 1");
         pack();
         setLocationRelativeTo(getOwner());
@@ -154,16 +253,14 @@ public class MainFrame extends JFrame {
     private JTextField textName;
     private JLabel label3;
     private JTextField textEmail;
-    private JButton buttonSearch;
     private JLabel label4;
     private JFormattedTextField textBirthDate;
-    private JButton buttonLeft;
-    private JButton buttonRead;
-    private JButton buttonRight;
+    private JButton buttonCreate;
+    private JButton buttonSearch;
     private JScrollPane scrollPane1;
     private JTextArea textMessage;
     private JButton buttonCleaner;
-    private JButton buttonCreate;
+    private JButton buttonRead;
     private JButton buttonUpdate;
     private JButton buttonDelete;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on

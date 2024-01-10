@@ -5,11 +5,14 @@ import java.time.LocalDate;
 
 public class User {
 
-    private final String userName;
+    private String userName;
 
-    private final String userEmail;
+    private String userEmail;
 
-    private final LocalDate userBirthDate;
+    private LocalDate userBirthDate;
+
+    public User(){
+    }
 
     public User(String userName, String userEmail, LocalDate userBirthDate) {
         this.userName = userName;

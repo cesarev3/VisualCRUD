@@ -39,12 +39,6 @@ new FormModel {
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 1 2 4 1"
 			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonSearch"
-				"text": "Pesquisar"
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 5 2 2 1"
-			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
 				"text": "Data de Nascimento"
@@ -58,22 +52,18 @@ new FormModel {
 				"value": "cell 2 3"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonLeft"
-				"text": "<"
+				name: "buttonCreate"
+				"text": "Incluir"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "create", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 3 3"
+				"value": "cell 3 3 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonRead"
-				"text": "Listar"
+				name: "buttonSearch"
+				"text": "Pesquisar"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "search", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 4 3 2 1"
-			} )
-			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonRight"
-				"text": ">"
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 6 3"
+				"value": "cell 5 3 2 1"
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
@@ -87,24 +77,28 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonCleaner"
 				"text": "Limpar tela"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cleaner", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 7 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "buttonCreate"
-				"text": "Incluir"
+				name: "buttonRead"
+				"text": "Listar"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "read", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 2 7"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonUpdate"
 				"text": "Alterar"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "update", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 3 7 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonDelete"
 				"text": "Apagar"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "delete", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 5 7 2 1"
 			} )
