@@ -62,6 +62,49 @@ public class User {
         return dayIsOk;
     }
 
+    public boolean isBirthdayDateOk(User user,
+                                            String inputBirthdayDate) {
+
+        boolean isYearOk = user.checkYear(Integer.parseInt(inputBirthdayDate.substring(6, 10)));
+        boolean isMonthOk = user.checkMonth(Integer.parseInt(inputBirthdayDate.substring(3, 5)));
+        boolean isDayOk = user.checkDay(Integer.parseInt(inputBirthdayDate.substring(0, 2)),
+                Integer.parseInt(inputBirthdayDate.substring(3, 5)),
+                Integer.parseInt(inputBirthdayDate.substring(6, 10)));
+
+        return isYearOk && isMonthOk && isDayOk;
+    }
+
+    public LocalDate stringToLocalDate(String inputBirthdayDate) {
+        return LocalDate.of(
+                Integer.parseInt(inputBirthdayDate.substring(6, 10)),
+                Integer.parseInt(inputBirthdayDate.substring(3, 5)),
+                Integer.parseInt(inputBirthdayDate.substring(0, 2)));
+    }
+
+    public String localDateToText(LocalDate inputBirthdayDate) {
+        String birthDay;
+        if (inputBirthdayDate.getDayOfMonth() < 10) {
+            birthDay = "0" + String.valueOf(inputBirthdayDate.getDayOfMonth());
+        } else {
+            birthDay = String.valueOf(inputBirthdayDate.getDayOfMonth());
+        }
+
+        String birthMonth;
+        if (inputBirthdayDate.getMonthValue() < 10) {
+            birthMonth = "0" + String.valueOf(inputBirthdayDate.getMonthValue());
+        } else {
+            birthMonth = String.valueOf(inputBirthdayDate.getMonthValue());
+        }
+
+        return birthDay + birthMonth + String.valueOf(inputBirthdayDate.getYear());
+    }
+
+    public String localDateToPanel(LocalDate inputBirthdayDate) {
+        String stringDate = localDateToText(inputBirthdayDate);
+        return stringDate.substring(0, 2) + "/" + stringDate.substring(2, 4) +
+                "/" + stringDate.substring(4, 8);
+    }
+
     public String getUserName() {
         return this.userName;
     }

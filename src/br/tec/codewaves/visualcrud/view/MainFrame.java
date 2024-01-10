@@ -6,8 +6,8 @@ package br.tec.codewaves.visualcrud.view;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 
@@ -19,6 +19,7 @@ import net.miginfocom.swing.*;
  * @author magne
  */
 public class MainFrame extends JFrame {
+
     UserOperations userOperations = new UserOperations();
     User user = new User();
 
@@ -29,6 +30,10 @@ public class MainFrame extends JFrame {
 
     private void cleaner(ActionEvent e) {
         // TODO add your code here
+        textEmail.setText("");
+        textName.setText("");
+        textBirthDate.setText("");
+        textMessage.setText("");
     }
 
     private void create(ActionEvent e) {
@@ -40,80 +45,141 @@ public class MainFrame extends JFrame {
         if (userOperations.validarEmail(userEmail)) {
             JOptionPane.showMessageDialog(null, "Atenção!\n" +
                     "Usuário com email duplicado\ndados não serão salvos!");
-            cleanEntries();
+//            cleanEntries();
+
+        } else if (!user.isBirthdayDateOk(user, userBirthDate)) {
+            JOptionPane.showMessageDialog(null, "Data inválida!");
 
         } else {
-            if (isBirthdayDateOk(user, userBirthDate)) {
-                User inputUser = new User(userName, userEmail,
-                        formatLocalDate(userBirthDate));
+            User inputUser = new User(userName, userEmail,
+                    user.stringToLocalDate(userBirthDate));
+
+            int answer = JOptionPane.showConfirmDialog(null,
+                    "Cadastrar o usuário?\n" +
+                            "Nome: " + userName + "\nemail: " + userEmail +
+                            "\nData Nascimento: " + userBirthDate);
+
+            if (answer == JOptionPane.YES_OPTION) {
                 userOperations.saveUser(inputUser);
-
-                JOptionPane.showMessageDialog(null,
-                        "Usuário cadastrado com sucesso\n" +
-                        "Nome: " + userName + "\nemail: " + userEmail +
-                                "\nData Nascimento: " + userBirthDate);
-
+                JOptionPane.showMessageDialog(null, "Usuário cadastrado!");
                 cleanEntries();
-
-            } else {
-                JOptionPane.showMessageDialog(null, "Data inválida!");
             }
         }
     }
 
     private void update(ActionEvent e) {
         // TODO add your code here
+        String userName = textName.getText();
+        String userEmail = textEmail.getText();
+        String userBirthDate = textBirthDate.getText();
+
+        if (!userOperations.validarEmail(userEmail)) {
+            JOptionPane.showMessageDialog(null, "Atenção!\n" +
+                    "Email não faz parte do banco de dados. Inclua antes de atualizar");
+
+        } else if (!user.isBirthdayDateOk(user, userBirthDate)) {
+            JOptionPane.showMessageDialog(null, "Data inválida!");
+
+        } else {
+            User inputUser = new User(userName, userEmail,
+                    user.stringToLocalDate(userBirthDate));
+
+            int answer = JOptionPane.showConfirmDialog(null,
+                    "Atualizar o usuário?\n" +
+                            "Nome: " + userName + "\nemail: " + userEmail +
+                            "\nData Nascimento: " + userBirthDate);
+            if (answer == JOptionPane.YES_OPTION) {
+                userOperations.updateUser(inputUser);
+                JOptionPane.showMessageDialog(null, "Usuário atualizado!");
+                cleanEntries();
+            }
+        }
     }
 
     private void delete(ActionEvent e) {
         // TODO add your code here
+        String userName = textName.getText();
+        String userEmail = textEmail.getText();
+        String userBirthDate = textBirthDate.getText();
+
+        if (!userOperations.validarEmail(userEmail)) {
+            JOptionPane.showMessageDialog(null, "Atenção!\n" +
+                    "Usuário não faz parte do banco de dados. Inclua antes de atualizar");
+
+//        } else if (!user.isBirthdayDateOk(user, userBirthDate)) {
+//            JOptionPane.showMessageDialog(null, "Data inválida!");
+
+        } else {
+            int answer = JOptionPane.showConfirmDialog(null,
+                    "Excluir o usuário?\n" +
+                            "Nome: " + userName + "\nemail: " + userEmail +
+                            "\nData Nascimento: " + userBirthDate);
+
+            if (answer == JOptionPane.YES_OPTION) {
+                userOperations.removeUser(userEmail);
+                JOptionPane.showMessageDialog(null, "Usuário excluído!");
+                cleanEntries();
+            }
+        }
     }
 
     private void read(ActionEvent e) {
         // TODO add your code here
-        ArrayList<User> dataBaseUsers;
+        List<User> dataBaseUsers;
         String readOut = "";
 
         dataBaseUsers = userOperations.getDataBaseUsers();
 
         for(User item : dataBaseUsers) {
-            readOut += ("------" +
-                    "\nNome: " + item.getUserName() +
+            readOut += ("Nome: " + item.getUserName() +
                     "\ne-mail: " + item.getUserEmail() +
-                    " Nascimento: " + item.getUserBirthDate() + "\n");
+                    " | Nascimento: " +
+                    user.localDateToPanel(item.getUserBirthDate()) +
+                    "\n-------\n");
         }
         textMessage.setText(readOut);
     }
 
-    private void right(ActionEvent e) {
-        // TODO add your code here
-    }
-
-    private void left(ActionEvent e) {
-        // TODO add your code here
-    }
-
     private void search(ActionEvent e) {
         // TODO add your code here
-    }
+        List<User> dataBaseUsers;
+        dataBaseUsers = userOperations.getDataBaseUsers();
 
-    private static boolean isBirthdayDateOk(User user,
-                                            String inputBirthdayDate) {
+        List<String> inputList = new ArrayList<>();
+        for(User user : dataBaseUsers) {
+            inputList.add(user.getUserName());
+        }
 
-        boolean isYearOk = user.checkYear(Integer.parseInt(inputBirthdayDate.substring(6, 10)));
-        boolean isMonthOk = user.checkMonth(Integer.parseInt(inputBirthdayDate.substring(3, 5)));
-        boolean isDayOk = user.checkDay(Integer.parseInt(inputBirthdayDate.substring(0, 2)),
-                Integer.parseInt(inputBirthdayDate.substring(3, 5)),
-                Integer.parseInt(inputBirthdayDate.substring(6, 10)));
+        String userName = textName.getText();
+        List<String> foundNames = inputList.stream().filter(nome -> nome.toLowerCase()
+                .contains(userName.toLowerCase())).toList();
 
-        return isYearOk && isMonthOk && isDayOk;
-    }
+        if (foundNames.isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Nenhum usuário localizado");
+        } else {
 
-    private static LocalDate formatLocalDate(String inputBirthdayDate) {
-        return LocalDate.of(
-                Integer.parseInt(inputBirthdayDate.substring(6, 10)),
-                Integer.parseInt(inputBirthdayDate.substring(3, 5)),
-                Integer.parseInt(inputBirthdayDate.substring(0, 2)));
+            String readOut = "";
+            String searchName;
+
+            for (String searchItem : foundNames) {
+                searchName = searchItem;
+                for (User item : userOperations.getDataBaseUsers()) {
+                    if (searchName.equals(item.getUserName())) {
+                        readOut += ("Nome: " + item.getUserName() +
+                                "\ne-mail: " + item.getUserEmail() +
+                                " | Nascimento: " + user.localDateToPanel(item.getUserBirthDate()) +
+                                "\n-------\n");
+
+                        textName.setText(item.getUserName());
+                        textEmail.setText(item.getUserEmail());
+                        textBirthDate.setText(user.localDateToText(item.getUserBirthDate()));
+                    }
+                }
+            }
+
+            textMessage.setText(readOut);
+        }
     }
 
     private void cleanEntries() {
@@ -147,85 +213,106 @@ public class MainFrame extends JFrame {
         contentPane.setLayout(new MigLayout(
             "hidemode 3",
             // columns
-            "[50,fill]" +
-            "[50,fill]" +
-            "[100,fill]" +
-            "[50,fill]" +
-            "[50,fill]" +
-            "[50,fill]" +
-            "[50,fill]",
+            "[70,fill]" +
+            "[70,fill]" +
+            "[110,fill]" +
+            "[70,fill]" +
+            "[70,fill]" +
+            "[70,fill]" +
+            "[70,fill]",
             // rows
+            "[54]" +
+            "[]" +
+            "[50]" +
+            "[50]" +
+            "[50]" +
             "[60]" +
-            "[40]" +
-            "[40]" +
-            "[40]" +
-            "[]" +
-            "[47]" +
-            "[]" +
+            "[60]" +
+            "[60]" +
             "[40]"));
 
         //---- label1 ----
-        label1.setText("Visual CRUD by CodeWaves");
+        label1.setText("Visual CRUD");
         label1.setFont(new Font("sansserif", Font.PLAIN, 20));
         label1.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(label1, "cell 1 0 6 1");
+        contentPane.add(label1, "cell 0 0 7 1");
 
         //---- label2 ----
         label2.setText("Nome");
-        contentPane.add(label2, "cell 0 1");
-        contentPane.add(textName, "cell 1 1 6 1");
+        label2.setFont(new Font("sansserif", Font.PLAIN, 18));
+        contentPane.add(label2, "cell 0 2");
+
+        //---- textName ----
+        textName.setFont(new Font("sansserif", Font.PLAIN, 18));
+        contentPane.add(textName, "cell 1 2 6 1");
 
         //---- label3 ----
         label3.setText("Email");
-        contentPane.add(label3, "cell 0 2");
-        contentPane.add(textEmail, "cell 1 2 4 1");
+        label3.setFont(new Font("sansserif", Font.PLAIN, 18));
+        contentPane.add(label3, "cell 0 3");
+
+        //---- textEmail ----
+        textEmail.setFont(new Font("sansserif", Font.PLAIN, 18));
+        contentPane.add(textEmail, "cell 1 3 4 1");
 
         //---- label4 ----
-        label4.setText("Data de Nascimento");
-        contentPane.add(label4, "cell 0 3 2 1");
+        label4.setText("Nascimento em");
+        label4.setFont(new Font("sansserif", Font.PLAIN, 18));
+        contentPane.add(label4, "cell 0 4 2 1");
 
         //---- textBirthDate ----
         textBirthDate.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(textBirthDate, "cell 2 3");
+        textBirthDate.setFont(new Font("sansserif", Font.PLAIN, 18));
+        contentPane.add(textBirthDate, "cell 2 4");
 
         //---- buttonCreate ----
         buttonCreate.setText("Incluir");
+        buttonCreate.setFont(new Font("sansserif", Font.PLAIN, 18));
         buttonCreate.addActionListener(e -> create(e));
-        contentPane.add(buttonCreate, "cell 3 3 2 1");
+        contentPane.add(buttonCreate, "cell 3 4 2 1");
 
         //---- buttonSearch ----
         buttonSearch.setText("Pesquisar");
+        buttonSearch.setFont(new Font("sansserif", Font.PLAIN, 18));
         buttonSearch.addActionListener(e -> search(e));
-        contentPane.add(buttonSearch, "cell 5 3 2 1");
+        contentPane.add(buttonSearch, "cell 5 4 2 1");
 
         //======== scrollPane1 ========
         {
 
             //---- textMessage ----
-            textMessage.setRows(5);
+            textMessage.setRows(9);
+            textMessage.setFont(new Font("sansserif", Font.PLAIN, 18));
             scrollPane1.setViewportView(textMessage);
         }
-        contentPane.add(scrollPane1, "cell 0 4 7 3");
+        contentPane.add(scrollPane1, "cell 0 5 7 3");
 
         //---- buttonCleaner ----
         buttonCleaner.setText("Limpar tela");
-        buttonCleaner.addActionListener(e -> cleaner(e));
-        contentPane.add(buttonCleaner, "cell 0 7 2 1");
+        buttonCleaner.setFont(new Font("sansserif", Font.PLAIN, 18));
+        buttonCleaner.addActionListener(e -> {
+			cleaner(e);
+			cleaner(e);
+		});
+        contentPane.add(buttonCleaner, "cell 0 8 2 1");
 
         //---- buttonRead ----
         buttonRead.setText("Listar");
+        buttonRead.setFont(new Font("sansserif", Font.PLAIN, 18));
         buttonRead.addActionListener(e -> read(e));
-        contentPane.add(buttonRead, "cell 2 7");
+        contentPane.add(buttonRead, "cell 2 8");
 
         //---- buttonUpdate ----
         buttonUpdate.setText("Alterar");
+        buttonUpdate.setFont(new Font("sansserif", Font.PLAIN, 18));
         buttonUpdate.addActionListener(e -> update(e));
-        contentPane.add(buttonUpdate, "cell 3 7 2 1");
+        contentPane.add(buttonUpdate, "cell 3 8 2 1");
 
         //---- buttonDelete ----
-        buttonDelete.setText("Apagar");
+        buttonDelete.setText("Excluir");
+        buttonDelete.setFont(new Font("sansserif", Font.PLAIN, 18));
         buttonDelete.addActionListener(e -> delete(e));
-        contentPane.add(buttonDelete, "cell 5 7 2 1");
+        contentPane.add(buttonDelete, "cell 5 8 2 1");
         pack();
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents  @formatter:on

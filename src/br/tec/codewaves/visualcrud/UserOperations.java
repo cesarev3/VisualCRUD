@@ -1,10 +1,11 @@
 package br.tec.codewaves.visualcrud;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserOperations {
 
-    private final ArrayList<User> dataBaseUsers;
+    private final List<User> dataBaseUsers;
 
     public UserOperations() {
         this.dataBaseUsers = new ArrayList<>();
@@ -44,12 +45,13 @@ public class UserOperations {
         System.out.println(">>> usuário atualizado!");
     }
 
+
     public void saveUser(User usuario) {
         dataBaseUsers.add(usuario);
         System.out.println(">>> usuário cadastrado!");
     }
 
-    public ArrayList<User> getDataBaseUsers() {
+    public List<User> getDataBaseUsers() {
         return this.dataBaseUsers;
     }
 }

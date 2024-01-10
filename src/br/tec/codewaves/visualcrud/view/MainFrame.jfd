@@ -5,106 +5,120 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 			"$layoutConstraints": "hidemode 3"
-			"$columnConstraints": "[50,fill][50,fill][100,fill][50,fill][50,fill][50,fill][50,fill]"
-			"$rowConstraints": "[60][40][40][40][][47][][40]"
+			"$columnConstraints": "[70,fill][70,fill][110,fill][70,fill][70,fill][70,fill][70,fill]"
+			"$rowConstraints": "[54][][50][50][50][60][60][60][40]"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label1"
-				"text": "Visual CRUD by CodeWaves"
+				"text": "Visual CRUD"
 				"font": new java.awt.Font( "sansserif", 0, 20 )
 				"horizontalAlignment": 0
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 1 0 6 1"
+				"value": "cell 0 0 7 1"
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label2"
 				"text": "Nome"
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 1"
-			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "textName"
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 1 1 6 1"
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label3"
-				"text": "Email"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 2"
 			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "textEmail"
+				name: "textName"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 1 2 4 1"
+				"value": "cell 1 2 6 1"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Email"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 3"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textEmail"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 1 3 4 1"
 			} )
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "label4"
-				"text": "Data de Nascimento"
+				"text": "Nascimento em"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 3 2 1"
+				"value": "cell 0 4 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JFormattedTextField" ) {
 				name: "textBirthDate"
 				"horizontalAlignment": 0
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 2 3"
+				"value": "cell 2 4"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonCreate"
 				"text": "Incluir"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "create", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 3 3 2 1"
+				"value": "cell 3 4 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonSearch"
 				"text": "Pesquisar"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "search", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 5 3 2 1"
+				"value": "cell 5 4 2 1"
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JTextArea" ) {
 					name: "textMessage"
-					"rows": 5
+					"rows": 9
+					"font": new java.awt.Font( "sansserif", 0, 18 )
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 4 7 3"
+				"value": "cell 0 5 7 3"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonCleaner"
 				"text": "Limpar tela"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cleaner", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "cleaner", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 7 2 1"
+				"value": "cell 0 8 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonRead"
 				"text": "Listar"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "read", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 2 7"
+				"value": "cell 2 8"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonUpdate"
 				"text": "Alterar"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "update", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 3 7 2 1"
+				"value": "cell 3 8 2 1"
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "buttonDelete"
-				"text": "Apagar"
+				"text": "Excluir"
+				"font": new java.awt.Font( "sansserif", 0, 18 )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "delete", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 5 7 2 1"
+				"value": "cell 5 8 2 1"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 285, 280 )
+			"size": new java.awt.Dimension( 590, 515 )
 		} )
 	}
 }
