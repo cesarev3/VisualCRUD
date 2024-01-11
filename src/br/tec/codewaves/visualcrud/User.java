@@ -62,6 +62,19 @@ public class User {
         return dayIsOk;
     }
 
+    public int calculateAge(LocalDate inputBirthdayDate) {
+        LocalDate currentDate = LocalDate.now();
+        int years = currentDate.getYear() - inputBirthdayDate.getYear();
+
+        if (inputBirthdayDate.getMonthValue() > currentDate.getMonthValue()) {
+            years --;
+        } else if ((inputBirthdayDate.getMonthValue() == currentDate.getMonthValue()) &&
+                (inputBirthdayDate.getDayOfMonth() > currentDate.getDayOfMonth())) {
+            years --;
+        }
+        return  years;
+    }
+
     public boolean isBirthdayDateOk(User user,
                                             String inputBirthdayDate) {
 

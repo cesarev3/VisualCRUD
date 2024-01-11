@@ -2,6 +2,7 @@ package br.tec.codewaves.visualcrud;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class UserOperations {
 
@@ -26,7 +27,7 @@ public class UserOperations {
         for(User item : dataBaseUsers) {
             if (item.getUserEmail().equals(inputEmail)) {
                 this.dataBaseUsers.remove(item);
-                System.out.println(">>> usuário excluído!");
+//                System.out.println(">>> usuário excluído!");
                 break;
             }
         }
@@ -42,14 +43,16 @@ public class UserOperations {
             index ++;
         }
         this.dataBaseUsers.set(index, usuario);
-        System.out.println(">>> usuário atualizado!");
+//        System.out.println(">>> usuário atualizado!");
     }
 
 
     public void saveUser(User usuario) {
         dataBaseUsers.add(usuario);
-        System.out.println(">>> usuário cadastrado!");
+//        System.out.println(">>> usuário cadastrado!");
     }
+
+
 
     public List<User> getDataBaseUsers() {
         return this.dataBaseUsers;

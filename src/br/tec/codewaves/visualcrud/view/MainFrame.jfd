@@ -78,7 +78,7 @@ new FormModel {
 				add( new FormComponent( "javax.swing.JTextArea" ) {
 					name: "textMessage"
 					"rows": 9
-					"font": new java.awt.Font( "sansserif", 0, 18 )
+					"font": new java.awt.Font( "sansserif", 0, 16 )
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 5 7 3"

@@ -6,8 +6,10 @@ package br.tec.codewaves.visualcrud.view;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 
@@ -22,6 +24,7 @@ public class MainFrame extends JFrame {
 
     UserOperations userOperations = new UserOperations();
     User user = new User();
+
 
 
     public MainFrame() {
@@ -45,7 +48,6 @@ public class MainFrame extends JFrame {
         if (userOperations.validarEmail(userEmail)) {
             JOptionPane.showMessageDialog(null, "Atenção!\n" +
                     "Usuário com email duplicado\ndados não serão salvos!");
-//            cleanEntries();
 
         } else if (!user.isBirthdayDateOk(user, userBirthDate)) {
             JOptionPane.showMessageDialog(null, "Data inválida!");
@@ -103,11 +105,9 @@ public class MainFrame extends JFrame {
         String userBirthDate = textBirthDate.getText();
 
         if (!userOperations.validarEmail(userEmail)) {
-            JOptionPane.showMessageDialog(null, "Atenção!\n" +
-                    "Usuário não faz parte do banco de dados. Inclua antes de atualizar");
-
-//        } else if (!user.isBirthdayDateOk(user, userBirthDate)) {
-//            JOptionPane.showMessageDialog(null, "Data inválida!");
+            JOptionPane.showMessageDialog(null,
+                    "Atenção!\n" + "Usuário não faz parte do banco de dados." +
+                            " Inclua antes de atualizar");
 
         } else {
             int answer = JOptionPane.showConfirmDialog(null,
@@ -134,7 +134,8 @@ public class MainFrame extends JFrame {
             readOut += ("Nome: " + item.getUserName() +
                     "\ne-mail: " + item.getUserEmail() +
                     " | Nascimento: " +
-                    user.localDateToPanel(item.getUserBirthDate()) +
+                    user.localDateToPanel(item.getUserBirthDate()) + " | " +
+                    user.calculateAge(item.getUserBirthDate()) + " anos" +
                     "\n-------\n");
         }
         textMessage.setText(readOut);
@@ -151,8 +152,8 @@ public class MainFrame extends JFrame {
         }
 
         String userName = textName.getText();
-        List<String> foundNames = inputList.stream().filter(nome -> nome.toLowerCase()
-                .contains(userName.toLowerCase())).toList();
+        List<String> foundNames = inputList.stream().filter(
+                nome -> nome.toLowerCase().contains(userName.toLowerCase())).toList();
 
         if (foundNames.isEmpty()) {
             JOptionPane.showMessageDialog(null,
@@ -168,12 +169,15 @@ public class MainFrame extends JFrame {
                     if (searchName.equals(item.getUserName())) {
                         readOut += ("Nome: " + item.getUserName() +
                                 "\ne-mail: " + item.getUserEmail() +
-                                " | Nascimento: " + user.localDateToPanel(item.getUserBirthDate()) +
-                                "\n-------\n");
+                                " | Nascimento: " + user.localDateToPanel(
+                                        item.getUserBirthDate()) + " | " +
+                                user.calculateAge(item.getUserBirthDate()) +
+                                " anos\n-------\n");
 
                         textName.setText(item.getUserName());
                         textEmail.setText(item.getUserEmail());
-                        textBirthDate.setText(user.localDateToText(item.getUserBirthDate()));
+                        textBirthDate.setText(user.localDateToText(
+                                item.getUserBirthDate()));
                     }
                 }
             }
@@ -188,6 +192,43 @@ public class MainFrame extends JFrame {
         textBirthDate.setText("");
         textMessage.setText("");
     }
+
+    private void populateDataBase() {
+        Random random = new Random();
+
+        String[] maleNames = {"Miguel", "Arthur", "Gael", "Heitor", "Theo",
+                "Davi", "Gabriel", "Bernardo", "Samuel", "Joao Miguel"};
+        String[] femaleNames = {"Helena", "Alice", "Laura", "Maria Alice",
+                "Valentina", "Heloisa", "Maria Clara", "Maria Cecilia",
+                "Maria Julia", "Sophia"};
+        String[] lastNames = {"Silva", "Cavalcanti", "Oliveira", "Santos",
+                "Souza", "Lima", "Costa", "Pereira", "Carvalho", "Rodrigues"};
+
+        for (int i = 0; i < 50; i++) {
+            String userName;
+            int gender = random.nextInt(2);
+            if (gender == 0) {
+                userName = (maleNames[random.nextInt(10)] + " " +
+                        lastNames[random.nextInt(10)]);
+            } else {
+                userName = (femaleNames[random.nextInt(10)] + " " +
+                        lastNames[random.nextInt(10)]);
+            }
+
+            String[] splitName = userName.split(" ");
+            String userEmail = splitName[0].trim() +
+                    String.valueOf(random.nextInt(9000) + 1000) + "@email.com";
+
+            int userYear = random.nextInt(100) + 1924;
+            int userMonth = random.nextInt(12) + 1;
+            int userDay = random.nextInt(28) + 1;
+
+            User inputUser = new User(userName, userEmail, LocalDate.of(userYear,
+                    userMonth, userDay));
+            userOperations.saveUser(inputUser);
+        }
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
@@ -282,7 +323,7 @@ public class MainFrame extends JFrame {
 
             //---- textMessage ----
             textMessage.setRows(9);
-            textMessage.setFont(new Font("sansserif", Font.PLAIN, 18));
+            textMessage.setFont(new Font("sansserif", Font.PLAIN, 16));
             scrollPane1.setViewportView(textMessage);
         }
         contentPane.add(scrollPane1, "cell 0 5 7 3");
@@ -330,6 +371,7 @@ public class MainFrame extends JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        populateDataBase();
 
     }
 
