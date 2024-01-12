@@ -143,10 +143,25 @@ public class MainFrame extends JFrame {
 
     private void search(ActionEvent e) {
         // TODO add your code here
-        List<User> dataBaseUsers;
-        dataBaseUsers = userOperations.getDataBaseUsers();
-
+        List<User> dataBaseUsers = userOperations.getDataBaseUsers();
         List<String> inputList = new ArrayList<>();
+
+        if (!textName.getText().isEmpty()) {
+            searchByName(dataBaseUsers, inputList);
+        } else {
+            searchByEmail(dataBaseUsers, inputList);
+        }
+    }
+
+    private void cleanEntries() {
+        textEmail.setText("");
+        textName.setText("");
+        textBirthDate.setText("");
+        textMessage.setText("");
+    }
+
+    private void searchByName(List<User> dataBaseUsers, List<String> inputList) {
+
         for(User user : dataBaseUsers) {
             inputList.add(user.getUserName());
         }
@@ -170,7 +185,7 @@ public class MainFrame extends JFrame {
                         readOut += ("Nome: " + item.getUserName() +
                                 "\ne-mail: " + item.getUserEmail() +
                                 " | Nascimento: " + user.localDateToPanel(
-                                        item.getUserBirthDate()) + " | " +
+                                item.getUserBirthDate()) + " | " +
                                 user.calculateAge(item.getUserBirthDate()) +
                                 " anos\n-------\n");
 
@@ -181,18 +196,49 @@ public class MainFrame extends JFrame {
                     }
                 }
             }
-
-            textMessage.setText(readOut);
+        textMessage.setText(readOut);
         }
     }
 
-    private void cleanEntries() {
-        textEmail.setText("");
-        textName.setText("");
-        textBirthDate.setText("");
-        textMessage.setText("");
-    }
+    private void searchByEmail(List<User> dataBaseUsers, List<String> inputList) {
 
+        for(User user : dataBaseUsers) {
+            inputList.add(user.getUserEmail());
+        }
+
+        String userName = textEmail.getText();
+        List<String> foundNames = inputList.stream().filter(
+                nome -> nome.toLowerCase().contains(userName.toLowerCase())).toList();
+
+        if (foundNames.isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "Nenhum usuário localizado");
+        } else {
+
+            String readOut = "";
+            String searchName;
+
+            for (String searchItem : foundNames) {
+                searchName = searchItem;
+                for (User item : userOperations.getDataBaseUsers()) {
+                    if (searchName.equals(item.getUserEmail())) {
+                        readOut += ("Nome: " + item.getUserName() +
+                                "\ne-mail: " + item.getUserEmail() +
+                                " | Nascimento: " + user.localDateToPanel(
+                                item.getUserBirthDate()) + " | " +
+                                user.calculateAge(item.getUserBirthDate()) +
+                                " anos\n-------\n");
+
+                        textName.setText(item.getUserName());
+                        textEmail.setText(item.getUserEmail());
+                        textBirthDate.setText(user.localDateToText(
+                                item.getUserBirthDate()));
+                    }
+                }
+            }
+        textMessage.setText(readOut);
+        }
+    }
     private void populateDataBase() {
         Random random = new Random();
 
@@ -205,27 +251,31 @@ public class MainFrame extends JFrame {
                 "Souza", "Lima", "Costa", "Pereira", "Carvalho", "Rodrigues"};
 
         for (int i = 0; i < 50; i++) {
-            String userName;
+            String testUserName;
             int gender = random.nextInt(2);
             if (gender == 0) {
-                userName = (maleNames[random.nextInt(10)] + " " +
+                testUserName = (maleNames[random.nextInt(10)] + " " +
                         lastNames[random.nextInt(10)]);
             } else {
-                userName = (femaleNames[random.nextInt(10)] + " " +
+                testUserName = (femaleNames[random.nextInt(10)] + " " +
                         lastNames[random.nextInt(10)]);
             }
 
-            String[] splitName = userName.split(" ");
-            String userEmail = splitName[0].trim() +
+
+            String[] splitName = testUserName.split(" ");
+            String testUserEmail = (splitName[0].trim()).toLowerCase() +
                     String.valueOf(random.nextInt(9000) + 1000) + "@email.com";
 
-            int userYear = random.nextInt(100) + 1924;
-            int userMonth = random.nextInt(12) + 1;
-            int userDay = random.nextInt(28) + 1;
+            int testUserYear = random.nextInt(100) + 1924;
+            int testUserMonth = random.nextInt(12) + 1;
+            int testUserDay = random.nextInt(28) + 1;
 
-            User inputUser = new User(userName, userEmail, LocalDate.of(userYear,
-                    userMonth, userDay));
-            userOperations.saveUser(inputUser);
+
+            if (!userOperations.validarEmail(testUserEmail)) {
+                User inputUser = new User(testUserName, testUserEmail, LocalDate.of(testUserYear,
+                        testUserMonth, testUserDay));
+                userOperations.saveUser(inputUser);
+            }
         }
     }
 
