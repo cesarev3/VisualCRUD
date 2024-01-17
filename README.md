@@ -25,13 +25,13 @@ Há apenas uma tela principal onde o usuário pode fazer todas as operações de
 CRUD e também pesquisar para refinar sua procura. Assim fica fácil de já usar<br>
 o dado filtrado para novas operações como alterar ou excluir.<br>
 
-![Alt text](C:\Users\magne\Desktop\Projects\VisualCRUD\src\br\tec\codewaves\visualcrud\resources\visualCrud1.png "Tela do programa")<br>
+![Alt text](/src/resources/visualCrud1.png "Tela do programa")<br>
 
 Para verificar duplicações de registro e validação da data de nascimento hábr>
 uma janela estilo Pop-up para solicitar a interação do usuário. O mesmo ocorre<br>
 na validação das operações de inclusão, alteração e exclusão.<br>
 
-![Alt text](C:\Users\magne\Desktop\Projects\VisualCRUD\src\br\tec\codewaves\visualcrud\resources\visualCrud2.png "Tela de confirmação")<br>
+![Alt text](/src/resources/visualCrud2.png "Tela de confirmação")<br>
 
 # Conclusão
 Este projeto foi trabalhoso e inspirador, porque ele abre as portas para novas<br>
