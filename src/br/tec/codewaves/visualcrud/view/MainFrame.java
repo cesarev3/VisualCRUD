@@ -46,8 +46,10 @@ public class MainFrame extends JFrame {
         String userBirthDate = textBirthDate.getText();
 
         if (userOperations.validarEmail(userEmail)) {
-            JOptionPane.showMessageDialog(null, "Atenção!\n" +
-                    "Usuário com email duplicado\ndados não serão salvos!");
+            JOptionPane.showMessageDialog(null, """
+                    Atenção!
+                    Usuário com email duplicado
+                    dados não serão salvos!""");
 
         } else if (!user.isBirthdayDateOk(user, userBirthDate)) {
             JOptionPane.showMessageDialog(null, "Data inválida!");
@@ -90,6 +92,7 @@ public class MainFrame extends JFrame {
                     "Atualizar o usuário?\n" +
                             "Nome: " + userName + "\nemail: " + userEmail +
                             "\nData Nascimento: " + userBirthDate);
+
             if (answer == JOptionPane.YES_OPTION) {
                 userOperations.updateUser(inputUser);
                 JOptionPane.showMessageDialog(null, "Usuário atualizado!");
@@ -126,19 +129,20 @@ public class MainFrame extends JFrame {
     private void read(ActionEvent e) {
         // TODO add your code here
         List<User> dataBaseUsers;
-        String readOut = "";
+        StringBuilder readOut = new StringBuilder();
 
         dataBaseUsers = userOperations.getDataBaseUsers();
 
         for(User item : dataBaseUsers) {
-            readOut += ("Nome: " + item.getUserName() +
-                    "\ne-mail: " + item.getUserEmail() +
-                    " | Nascimento: " +
-                    user.localDateToPanel(item.getUserBirthDate()) + " | " +
-                    user.calculateAge(item.getUserBirthDate()) + " anos" +
-                    "\n-------\n");
+            readOut.append("Nome: ").append(item.getUserName())
+                    .append("\ne-mail: ").append(item.getUserEmail())
+                    .append(" | Nascimento: ")
+                    .append(user.localDateToPanel(item.getUserBirthDate()))
+                    .append(" | ")
+                    .append(user.calculateAge(item.getUserBirthDate()))
+                    .append(" anos").append("\n-------\n");
         }
-        textMessage.setText(readOut);
+        textMessage.setText(readOut.toString());
     }
 
     private void search(ActionEvent e) {
@@ -175,19 +179,20 @@ public class MainFrame extends JFrame {
                     "Nenhum usuário localizado");
         } else {
 
-            String readOut = "";
+            StringBuilder readOut = new StringBuilder();
             String searchName;
 
             for (String searchItem : foundNames) {
                 searchName = searchItem;
                 for (User item : userOperations.getDataBaseUsers()) {
                     if (searchName.equals(item.getUserName())) {
-                        readOut += ("Nome: " + item.getUserName() +
-                                "\ne-mail: " + item.getUserEmail() +
-                                " | Nascimento: " + user.localDateToPanel(
-                                item.getUserBirthDate()) + " | " +
-                                user.calculateAge(item.getUserBirthDate()) +
-                                " anos\n-------\n");
+                        readOut.append("Nome: ").append(item.getUserName())
+                                .append("\ne-mail: ").append(item.getUserEmail())
+                                .append(" | Nascimento: ")
+                                .append(user.localDateToPanel(item.getUserBirthDate()))
+                                .append(" | ")
+                                .append(user.calculateAge(item.getUserBirthDate()))
+                                .append(" anos\n-------\n");
 
                         textName.setText(item.getUserName());
                         textEmail.setText(item.getUserEmail());
@@ -196,7 +201,7 @@ public class MainFrame extends JFrame {
                     }
                 }
             }
-        textMessage.setText(readOut);
+        textMessage.setText(readOut.toString());
         }
     }
 
@@ -215,19 +220,20 @@ public class MainFrame extends JFrame {
                     "Nenhum usuário localizado");
         } else {
 
-            String readOut = "";
+            StringBuilder readOut = new StringBuilder();
             String searchName;
 
             for (String searchItem : foundNames) {
                 searchName = searchItem;
                 for (User item : userOperations.getDataBaseUsers()) {
                     if (searchName.equals(item.getUserEmail())) {
-                        readOut += ("Nome: " + item.getUserName() +
-                                "\ne-mail: " + item.getUserEmail() +
-                                " | Nascimento: " + user.localDateToPanel(
-                                item.getUserBirthDate()) + " | " +
-                                user.calculateAge(item.getUserBirthDate()) +
-                                " anos\n-------\n");
+                        readOut.append("Nome: ").append(item.getUserName())
+                                .append("\ne-mail: ").append(item.getUserEmail())
+                                .append(" | Nascimento: ")
+                                .append(user.localDateToPanel(item.getUserBirthDate()))
+                                .append(" | ")
+                                .append(user.calculateAge(item.getUserBirthDate()))
+                                .append(" anos\n-------\n");
 
                         textName.setText(item.getUserName());
                         textEmail.setText(item.getUserEmail());
@@ -236,7 +242,7 @@ public class MainFrame extends JFrame {
                     }
                 }
             }
-        textMessage.setText(readOut);
+        textMessage.setText(readOut.toString());
         }
     }
     private void populateDataBase() {
@@ -264,7 +270,7 @@ public class MainFrame extends JFrame {
 
             String[] splitName = testUserName.split(" ");
             String testUserEmail = (splitName[0].trim()).toLowerCase() +
-                    String.valueOf(random.nextInt(9000) + 1000) + "@email.com";
+                    (random.nextInt(9000) + 1000) + "@email.com";
 
             int testUserYear = random.nextInt(100) + 1924;
             int testUserMonth = random.nextInt(12) + 1;
@@ -412,7 +418,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Visual CRUD - CodeWaves");
 
-        MaskFormatter maskDate = null;
+        MaskFormatter maskDate;
         try {
             maskDate = new MaskFormatter("##/##/####");
             maskDate.setPlaceholderCharacter('_');
